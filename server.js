@@ -4,36 +4,29 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 
 dotenv.config();
+
 const app = express();
 
-
+// ✅ FINAL CORS CONFIG — COPY EXACTLY
 app.use(cors({
-  origin: [
-    "http://localhost:5173",               // Local frontend
-    "https://todo-frontend.onrender.com"  
-  ],
+  origin: "*",                 // TEMPORARY — allows all origins
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// ✅ Parse JSON requests
 app.use(express.json());
 
-// ✅ ROUTES
+// ROUTES
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/tasks", require("./routes/tasks"));
 
-// ✅ MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected ✅"))
-  .catch(err => console.log("MongoDB Error ❌", err));
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
 
-// ✅ Root route
 app.get("/", (req, res) => {
-  res.send("Backend is running ✅");
+  res.send("Backend Running");
 });
 
-// ✅ Render automatically injects PORT
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running → Port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
