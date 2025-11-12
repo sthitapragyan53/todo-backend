@@ -6,15 +6,19 @@ const cors = require("cors");
 dotenv.config();
 const app = express();
 
-// ✅ FIXED: Proper CORS setup for Render
+// ✅ FIXED: Proper CORS setup (for both local + deployed frontend)
 app.use(cors({
   origin: [
-    "http://localhost:5173",               // for local dev
-    "https://your-frontend.onrender.com"   // ⬅️ replace this with your real frontend Render URL
+    "http://localhost:5173",               
+    "https://todo-frontend.onrender.com"   
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 }));
+
+// ✅ Handle preflight requests explicitly
+app.options("*", cors());
 
 // ✅ Parse JSON requests
 app.use(express.json());
